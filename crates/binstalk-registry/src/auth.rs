@@ -74,6 +74,10 @@ impl ResolvedRegistry {
     pub fn crate_source(&self) -> Result<binstalk_types::crate_info::CrateSource, url::ParseError> {
         self.registry.crate_source()
     }
+
+    pub fn cargo_install_index_arg(&self) -> String {
+        self.registry.cargo_install_index_arg()
+    }
 }
 
 impl fmt::Debug for ResolvedRegistry {

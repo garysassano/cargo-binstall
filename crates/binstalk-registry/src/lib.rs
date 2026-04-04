@@ -251,6 +251,14 @@ impl Registry {
             },
         })
     }
+
+    pub fn cargo_install_index_arg(&self) -> String {
+        match self {
+            #[cfg(feature = "git")]
+            Registry::Git(registry) => registry.url().to_string(),
+            Registry::Sparse(registry) => format!("sparse+{}", registry.url()),
+        }
+    }
 }
 
 impl fmt::Display for Registry {

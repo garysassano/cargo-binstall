@@ -51,6 +51,8 @@ pub struct Options {
     pub install_path: PathBuf,
     pub has_overriden_install_path: bool,
     pub cargo_root: Option<PathBuf>,
+    pub cargo_install_registry: Option<CompactString>,
+    pub cargo_install_index: Option<CompactString>,
 
     pub client: Client,
     pub gh_api_client: LazyGhApiClient,

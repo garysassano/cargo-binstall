@@ -130,11 +130,14 @@ pub fn install_crates(
             }
         });
 
-    let resolved_registry = {
+    let (resolved_registry, cargo_install_registry, cargo_install_index) = {
         let cargo_home = cargo_home.as_deref().unwrap_or(&cargo_root);
 
         if let Some(index) = args.index.clone() {
-            binstalk::registry::ResolvedRegistry::new(index, None)
+            let resolved_registry = binstalk::registry::ResolvedRegistry::new(index, None);
+            let cargo_install_index = resolved_registry.cargo_install_index_arg().into();
+
+            (resolved_registry, None, Some(cargo_install_index))
         } else {
             let registry_name = args.registry.clone().or_else(|| {
                 cargo_config
@@ -168,7 +171,11 @@ pub fn install_crates(
                 &registry,
             );
 
-            binstalk::registry::ResolvedRegistry::new(registry, registry_auth)
+            (
+                binstalk::registry::ResolvedRegistry::new(registry, registry_auth),
+                registry_name.filter(|name| !name.eq_ignore_ascii_case("crates-io")),
+                None,
+            )
         }
     };
 
@@ -205,6 +212,8 @@ pub fn install_crates(
         install_path,
         has_overriden_install_path: args.install_path.is_some(),
         cargo_root: Some(cargo_root),
+        cargo_install_registry,
+        cargo_install_index,
 
         client,
         gh_api_client,
