@@ -114,11 +114,32 @@ It does **not** yet support:
 
 - `cargo:token-from-stdout`
 - external credential-process protocol providers beyond the current scope
+- OS-native built-in providers such as `cargo:libsecret`,
+  `cargo:macos-keychain`, and `cargo:wincred`
 
 So for AWS CodeArtifact today:
 
 - phase 1 works with `cargo:token`
 - a future phase would be needed for the full `cargo:token-from-stdout` flow
+
+## Recommended later-phase ordering
+
+If this work continues beyond the current `cargo:token` support, the intended
+order is:
+
+1. `cargo:token-from-stdout`
+2. generic external credential-process providers using Cargo's protocol
+3. OS-native built-in providers such as `cargo:libsecret`,
+   `cargo:macos-keychain`, and `cargo:wincred`
+
+Why this order:
+
+- `cargo:token-from-stdout` is the smallest next step and covers practical
+  cases like AWS CodeArtifact
+- generic protocol-based external providers are the broader extensibility
+  mechanism and cover vendor- or company-specific helpers
+- OS-native built-ins are still useful, but are more platform-specific and can
+  come later unless maintainers want parity with Cargo's built-ins earlier
 
 ## Important correction
 
