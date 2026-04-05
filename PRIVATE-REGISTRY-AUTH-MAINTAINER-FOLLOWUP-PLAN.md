@@ -55,6 +55,14 @@ Tests to add:
 
 Current code uses handwritten `Debug` impls to avoid printing token values.
 
+Conclusion after checking `zeroize`:
+
+- `zeroize::Zeroizing<T>` zeroizes on drop, but does not provide redacted
+  `Debug` output
+- there does not appear to be a built-in `zeroize` helper for this
+- crates like `secrecy` or `redact` exist in the ecosystem, but adding a new
+  dependency just for this cleanup would be unnecessary for this PR
+
 Planned change:
 
 - replace the handwritten impls with a small local redacting helper/wrapper
